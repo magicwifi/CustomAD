@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>广告自定义</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+	<style>
+	    *{
+	    	margin: 0;
+	    	padding: 0;
+
+	    	
+	    }
+		header{
+			background:#CD3333;
+			height: 50px;
+			opacity: .7;
+		}
+		header h3{
+			color: #fff;
+			margin-left: 20%;
+
+		}
+		.mainbody{
+			background:#f8f8f8;
+			width: 910px;
+
+			margin: 10px auto;
+			/*overflow: auto;*/
+		}
+	    .leftbox{
+	    	/*background: #FF95CA;*/
+	    	width: 400px;
+	    	height: 600px;
+	    	float: left;
+
+	    }
+        .leftbox fieldset {
+        border: none;
+        margin:1em 0;
+        padding: 1em;
+        /*background: #f8f8f8;*/
+        }
+        .leftbox legend{
+        font-weight: bold;
+        }
+        .leftbox label{
+        display: block;
+        cursor: pointer;
+        }
+        .leftbox input{
+        width: 20em;
+         }
+        .leftbox textarea{
+        width: 100%;
+        height: 20em;
+         }
+
+        
+
+	    .rightbox{
+	    	/*background: #CA8EFF;*/
+	    	background-image: url('img/iphone.png');
+	    	background-repeat: no-repeat;
+	    	background-position: center;
+	    	width: 500px;
+	    	height: 600px;
+	    	float: left;
+	    	margin-left: 5px;
+	    	position: relative;
+	    	overflow: hidden;
+	    }
+	    .ad-title{
+	    	position: absolute;
+	    	width: 360px;
+	    	height: 70px;
+	    	/*background-color: #fff;*/
+	    	top:61px;
+	    	left:68px; 
+	    	overflow: hidden;
+        }
+        .ad-image{
+        	position: absolute;
+        	width: 360px;
+        	height: 250px;
+        	background-color: #ccc;
+        	top:131px;
+	    	left:68px;
+	        overflow: hidden;
+        }
+        .ad-content{
+            position: absolute;
+        	width: 360px;
+        	height: 130px;
+        	background-color: #fff;
+        	top:381px;
+	    	left:68px;
+
+        	
+        }
+        #uploadPreview img{
+            width: 360px;
+            height: 250px;
+
+        }
+        #dropbox{
+            border:10px dashed #ccc;
+            width:200px;
+            min-height: 150px;
+        }
+        #dropbox .hover{
+            border: 10px dashed #0c0;
+        }
+        .ad-sub-btn{
+            margin-bottom: 30px;
+        }
+
+	</style>
+</head>
+<body>
+	<header><h3>广告自定制页面</h3></header>
+
+	<div class="mainbody">
+
+		<div class="leftbox">
+			<form id="ad-form" method="post" action="" >
+                <fieldset>
+                        <label for="input_title1">广告标题:</label>
+                        <input name="input_title1" id="input_title1" class="inputBox inputStyleB_orange" type="text" style=" width:180px"  maxlength="12" onblur="savetitvalue()" value="" onkeyup="copyob1toob2()" />
+                </fieldset>
+                <fieldset>
+                        
+                        <label for="choose">广告图片:</label>
+                    <div id="dropbox"><span id="droplabel">将图片拖拽至此处...</span>
+                        <input id="choose" name="ad-image" type="file" /> 
+                    </div>
+                </fieldset>
+                <fieldset>
+                        <label for="pass">广告内容:</label>
+                        <textarea name="input_content1" id="input_content1" cols="30" rows="5" value="" onkeyup="copyob3toob4()">
+                        </textarea>
+                </fieldset>
+                <input class="ad-sub-btn" type="submit" value="预览效果" style="width:10em; ">
+        </form>
+		</div>
+        
+        <div class="rightbox">
+			<div class="ad-title">
+				<input class="inputBox titleB inputStyleB_orange" id="input_title2" name="" type="text" value="" maxlength="10" onkeyup="copyob2toob1()" style="font-size:50px;">
+			</div>
+			<div class="ad-image">
+				<div id="uploadPreview">
+                    <img id="preview" src="" alt="test" />      
+                </div>
+			</div>
+			<div class="ad-content">
+				<textarea id="input_content2" cols="34" rows="7" value="" name="input_content2" onkeyup="copyob4toob3()" style="font-size:16px;">
+                </textarea>
+			</div>
+			
+		</div>
+	</div>
+	
+</body>
+<script>
+    $(document).ready(function() {
+    var dropbox = document.getElementById("dropbox")
+
+    // init event handlers
+    dropbox.addEventListener("dragenter", dragEnter, false);
+    dropbox.addEventListener("dragexit", dragExit, false);
+    dropbox.addEventListener("dragover", dragOver, false);
+    dropbox.addEventListener("drop", drop, false);
+
+    // init the widgets
+    // $("#progressbar").progressbar();
+});
+
+function dragEnter(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+function dragExit(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+function dragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+function drop(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    var files = evt.dataTransfer.files;
+    var count = files.length;
+
+    // Only call the handler if 1 or more files was dropped.
+    if (count > 0)
+        handleFiles(files);
+}
+
+
+function handleFiles(files) {
+    var file = files[0];
+
+    document.getElementById("droplabel").innerHTML = "Processing " + file.name;
+
+    var reader = new FileReader();
+
+    // init the reader event handlers
+    // reader.onprogress = handleReaderProgress;
+    reader.onloadend = handleReaderLoadEnd;
+
+    // begin the read operation
+    reader.readAsDataURL(file);
+}
+
+function handleReaderProgress(evt) {
+    if (evt.lengthComputable) {
+        var loaded = (evt.loaded / evt.total);
+
+        // $("#progressbar").progressbar({ value: loaded * 100 });
+    }
+}
+
+function handleReaderLoadEnd(evt) {
+    // $("#progressbar").progressbar({ value: 100 });
+
+    var img = document.getElementById("preview");
+    img.src = evt.target.result;
+}
+</script>
+
+<script>
+//下面这段代码是控制显示的图像的大小
+	
+function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#uploadPreview>img').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#choose").change(function(){
+        readURL(this);
+    });
+</script>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function() {
+
+    //出现橘色高亮框
+    jQuery("#input_title1,#input_title2").mouseover(function(){
+        jQuery("#input_title1,#input_title2").removeClass("inputStyleB_gray").addClass("inputStyleB_orange");
+        })
+
+    jQuery("#input_title1,#input_title2").mouseleave (function(){
+        jQuery("#input_title1").removeClass("inputStyleB_orange").addClass("inputStyleB_gray");
+        jQuery("#input_title2").removeClass("inputStyleB_orange");
+        })
+    jQuery("#signageBtn").mouseover (function(){
+        jQuery("#signageBox").removeClass("inputStyleB_gray").addClass("inputStyleB_orange");
+        })
+    jQuery("#signageBox").mouseover (function(){
+        jQuery("#signageBox,#signageTab").removeClass("inputStyleB_gray").addClass("inputStyleB_orange");
+        })
+    jQuery("#signageBtn,#signageBox").mouseleave (function(){
+        jQuery("#signageBox,#signageTab").removeClass("inputStyleB_orange");
+        })
+})  
+
+
+    //同步变换
+    function copyob1toob2(){
+            document.all["input_title2"].value=document.all["input_title1"].value;
+        }
+    function copyob2toob1(){
+            document.all["input_title1"].value=document.all["input_title2"].value;
+        }
+    function copyob3toob4(){
+            document.all["input_content2"].value=document.all["input_content1"].value;
+        }
+    function copyob4toob3(){
+            document.all["input_content1"].value=document.all["input_content2"].value;
+        }
+
+</script>
+</html>
